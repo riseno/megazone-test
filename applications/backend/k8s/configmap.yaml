@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: megazone-backend-config
+data:
+  APP_NAME: "Megazone Backend"
+  APP_ENV: "uat"
+  APP_KEY: "base64:PWxouDjcsCOGu10jGRvk6dDSPz7dSM6kvXMWwcrc4Yo="
+  APP_DEBUG: "false"
+  APP_URL: "http://localhost"
+  DB_CONNECTION: "mysql"
+  DB_HOST: "megazone-rds-mysql.cab2hnelgi5p.ap-east-1.rds.amazonaws.com"
+  DB_PORT: "3306"
+  DB_DATABASE: "megazone_test"
+  DB_USERNAME: "megazone_test"
+  DB_PASSWORD: "megazone_test"

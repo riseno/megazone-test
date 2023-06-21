@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: megazone-frontend
+  labels:
+    app: megazone-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: megazone-frontend
+  template:
+    metadata:
+      name: megazone-frontend
+      labels:
+        app: megazone-frontend
+    spec:
+      securityContext:
+        fsGroup: 33
+      hostAliases:
+        - ip: "127.0.0.1"
+          hostnames:
+            - "php-fpm"
+      volumes:
+        - name: source-code
+          emptyDir: { }
+      initContainers:
+        - name: source
+          image: 337550234746.dkr.ecr.ap-east-1.amazonaws.com/megazone-frontend:v0.0.8
+          imagePullPolicy: Always
+          command: [
+            "sh",
+            "-c",
+            "cp -r /var/www/source/* /source
+                    && chmod -R 777 /source/storage
+                    && chmod -R 777 /source/bootstrap/cache"
+          ]
+          volumeMounts:
+            - mountPath: /source
+              name: source-code
+      containers:
+        - name: nginx
+          image: 337550234746.dkr.ecr.ap-east-1.amazonaws.com/nginx:v0.0.1
+          ports:
+            - containerPort: 80
+              protocol: TCP
+              name: http
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /source
+              name: source-code
+          resources:
+            requests:
+              cpu: 50m
+        - name: php-fpm
+          image: 337550234746.dkr.ecr.ap-east-1.amazonaws.com/php-fpm:latest
+          ports:
+            - containerPort: 9000
+              protocol: TCP
+              name: http
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /source
+              name: source-code
+          envFrom:
+            - configMapRef:
+                name: megazone-frontend-config
+          resources:
+            requests:
+              cpu: 200m
+      restartPolicy: Always

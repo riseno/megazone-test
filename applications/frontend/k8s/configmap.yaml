@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: megazone-frontend-config
+data:
+  APP_NAME: "Megazone Frontend"
+  APP_ENV: "uat"
+  APP_KEY: "base64:V4qIrr/AM8yB0hbuNhaQnJy4R40SL/e1hnDTDLIhFuA:"
+  APP_DEBUG: "true"
+  APP_URL: "http://localhost"
